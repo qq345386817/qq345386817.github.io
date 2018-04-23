@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="LuoPeike's Blog">
 <meta property="og:description" content="需求一个项目里有多个 Targets，其中一个的更新比较频繁，版本号递增很快，其他几个不经常更新，但是当它们更新的时候需要和更新快的那个版本号保持一致。如果每次都手动修改版本号，有点麻烦，所以需要找一个自动化方法实现多 Targets 版本号控制。
 查找资料Google 这几个关键词：“xcode general version auto”，找到一篇 Apple 官方文档：https://deve">
-<meta property="og:updated_time" content="2016-11-12T13:33:46.000Z">
+<meta property="og:updated_time" content="2018-04-23T15:37:12.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Xcode 多 Targets 版本号控制">
 <meta name="twitter:description" content="需求一个项目里有多个 Targets，其中一个的更新比较频繁，版本号递增很快，其他几个不经常更新，但是当它们更新的时候需要和更新快的那个版本号保持一致。如果每次都手动修改版本号，有点麻烦，所以需要找一个自动化方法实现多 Targets 版本号控制。
@@ -167,7 +167,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>一个项目里有多个 Targets，其中一个的更新比较频繁，版本号递增很快，其他几个不经常更新，但是当它们更新的时候需要和更新快的那个版本号保持一致。如果每次都手动修改版本号，有点麻烦，所以需要找一个自动化方法实现多 Targets 版本号控制。</p>
-<h3 id="查找资料"><a href="#查找资料" class="headerlink" title="查找资料"></a>查找资料</h3><p>Google 这几个关键词：“xcode general version auto”，找到一篇 Apple 官方文档：<br><a href="https://developer.apple.com/library/content/qa/qa1827/_index.html" target="_blank" rel="external">https://developer.apple.com/library/content/qa/qa1827/_index.html</a><br>发现 Apple 提供了命令行工具 agvtool 来进行项目版本号控制，而且<br>“Important: When your app includes multiple targets, agvtool will set the version numbers of all your targets to the same number.（重要：当你的 APP 包含多个 targets 的时候，agvtool 会把所有的 targets 设为同一个版本号）” 刚好符合我的需求。</p>
+<h3 id="查找资料"><a href="#查找资料" class="headerlink" title="查找资料"></a>查找资料</h3><p>Google 这几个关键词：“xcode general version auto”，找到一篇 Apple 官方文档：<br><a href="https://developer.apple.com/library/content/qa/qa1827/_index.html" target="_blank" rel="external">https://developer.apple.com/library/content/qa/qa1827/_index.html</a><br>发现 Apple 提供了命令行工具 agvtool 来进行项目版本号控制，而且<br>“Important: When your app includes multiple targets, agvtool will set the version numbers of all your targets to the same number.” （重要：当你的 APP 包含多个 targets 的时候，agvtool 会把所有的 targets 设为同一个版本号）刚好符合需求。</p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>agvtool 命令行工具是 Xcode Command Line 的一部分，不需要单独安装。根据官方文档在工程里设置好 Versioning System 等内容后，在终端 cd 到项目目录下，执行如下命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Version=&quot;1.7.5&quot;</div><div class="line">Build=&quot;2929&quot;</div><div class="line">xcrun agvtool new-marketing-version $&#123;Version&#125;</div><div class="line">xcrun agvtool new-version -all $&#123;Build&#125;</div></pre></td></tr></table></figure>
 <p>成功修改了所有 Targets 的版本号。</p>
@@ -189,6 +189,20 @@
 </article>
 
   
+<nav id="article-nav">
+  
+    <a href="/2018/04/23/pod-update-后项目出错的一种解决办法/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          pod update 后项目出错的一种解决办法
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
 
 
 
