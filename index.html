@@ -161,9 +161,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h3><p>项目里面使用了 Google 的 Material 库，在一次执行 ‘pod update’ 后，项目报错，不能编译，提示 “MotionTransition 文件重复”。Motion 是 Material 的依赖库。</p>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>在项目里定位该文件，发现果然有两个同名文件，只是路径不一样。</p>
-<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3>
+        <h3 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h3><p>项目里面使用了 Google 的 Material 库，在一次执行 ‘pod update’ 后，项目报错，不能编译通过，提示 “MotionTransition 文件重复”。Motion 是 Material 的依赖库。</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>在项目里定位该文件，发现果然有两个同名文件，只是路径不一样。应该是新版本 Material 的 pods 源设置出了问题。</p>
+<p>如果是项目代码，直接把多余的文件删掉即可。但是对于 CocoaPods 管理的第三方库，笔者一直遵守着一条基本原则：尽可能不动第三方库的源码。</p>
+<p>于是想到了一个 “把第三方库卸载重装” 的办法，开始动手尝试。</p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>在终端执行 ‘pod –help’，没有找到 “重装某个第三方库” 的命令，于是使用下面的办法：</p>
+<ol>
+<li>把 Podfile 里的 Material 库注释掉，执行 pod update；</li>
+<li>再把 Material 库取消注释，执行 pod update。</li>
+</ol>
+<p>问题解决。</p>
+
       
     </div>
     <div class="article-info article-info-index">
@@ -208,7 +216,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>一个项目里有多个 Targets，其中一个的更新比较频繁，版本号递增很快，其他几个不经常更新，但是当它们更新的时候需要和更新快的那个版本号保持一致。如果每次都手动修改版本号，有点麻烦，所以需要找一个自动化方法实现多 Targets 版本号控制。</p>
-<h3 id="查找资料"><a href="#查找资料" class="headerlink" title="查找资料"></a>查找资料</h3><p>Google 这几个关键词：“xcode general version auto”，找到一篇 Apple 官方文档：<br><a href="https://developer.apple.com/library/content/qa/qa1827/_index.html" target="_blank" rel="external">https://developer.apple.com/library/content/qa/qa1827/_index.html</a><br>发现 Apple 提供了命令行工具 agvtool 来进行项目版本号控制，而且<br>“Important: When your app includes multiple targets, agvtool will set the version numbers of all your targets to the same number.” （重要：当你的 APP 包含多个 targets 的时候，agvtool 会把所有的 targets 设为同一个版本号）刚好符合需求。</p>
+<h3 id="查找资料"><a href="#查找资料" class="headerlink" title="查找资料"></a>查找资料</h3><p>Google 这几个关键词：“xcode general version auto”，找到一篇 Apple 官方文档：</p>
+<p><a href="https://developer.apple.com/library/content/qa/qa1827/_index.html" target="_blank" rel="external">https://developer.apple.com/library/content/qa/qa1827/_index.html</a></p>
+<p>发现 Apple 提供了命令行工具 agvtool 来进行项目版本号控制，而且<br>“Important: When your app includes multiple targets, agvtool will set the version numbers of all your targets to the same number.” （重要：当你的 APP 包含多个 targets 的时候，agvtool 会把所有的 targets 设为同一个版本号）刚好符合需求。</p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>agvtool 命令行工具是 Xcode Command Line 的一部分，不需要单独安装。根据官方文档在工程里设置好 Versioning System 等内容后，在终端 cd 到项目目录下，执行如下命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Version=&quot;1.7.5&quot;</div><div class="line">Build=&quot;2929&quot;</div><div class="line">xcrun agvtool new-marketing-version $&#123;Version&#125;</div><div class="line">xcrun agvtool new-version -all $&#123;Build&#125;</div></pre></td></tr></table></figure>
 <p>成功修改了所有 Targets 的版本号。</p>
