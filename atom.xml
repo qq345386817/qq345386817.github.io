@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://luopeike.com/"/>
-  <updated>2018-06-14T15:35:55.893Z</updated>
+  <updated>2018-06-14T15:42:09.819Z</updated>
   <id>http://luopeike.com/</id>
   
   <author>
@@ -20,9 +20,10 @@
     <link href="http://luopeike.com/2018/04/23/pod-update-%E5%90%8E%E9%A1%B9%E7%9B%AE%E5%87%BA%E9%94%99%E7%9A%84%E4%B8%80%E7%A7%8D%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"/>
     <id>http://luopeike.com/2018/04/23/pod-update-后项目出错的一种解决办法/</id>
     <published>2018-04-23T15:35:37.000Z</published>
-    <updated>2018-06-14T15:35:55.893Z</updated>
+    <updated>2018-06-14T15:42:09.819Z</updated>
     
     <content type="html"><![CDATA[<h3 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h3><p>项目里使用了一个 Swift 实现的 Material Design 库 <a href="https://github.com/CosmicMind/Material" target="_blank" rel="external">Material</a>，在一次执行 ‘pod update’ 后，项目报错，不能编译通过，提示 “MotionTransition 文件重复”。Motion 是该库的依赖库。</p>
+<a id="more"></a> 
 <h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>在项目里定位该文件，发现果然有两个同名文件，只是路径不一样。应该是新版本 Material 的 pods 源设置出了问题。</p>
 <p>如果是项目代码，直接把多余的文件删掉即可。但是对于 CocoaPods 管理的第三方库，笔者一直遵守着一条基本原则：尽可能不动第三方库的源码。</p>
 <p>于是想到了一个 “把第三方库卸载重装” 的办法，开始动手尝试。</p>
@@ -36,7 +37,7 @@
     
     <summary type="html">
     
-      &lt;h3 id=&quot;问题出现&quot;&gt;&lt;a href=&quot;#问题出现&quot; class=&quot;headerlink&quot; title=&quot;问题出现&quot;&gt;&lt;/a&gt;问题出现&lt;/h3&gt;&lt;p&gt;项目里使用了一个 Swift 实现的 Material Design 库 &lt;a href=&quot;https://github.c
+      &lt;h3 id=&quot;问题出现&quot;&gt;&lt;a href=&quot;#问题出现&quot; class=&quot;headerlink&quot; title=&quot;问题出现&quot;&gt;&lt;/a&gt;问题出现&lt;/h3&gt;&lt;p&gt;项目里使用了一个 Swift 实现的 Material Design 库 &lt;a href=&quot;https://github.com/CosmicMind/Material&quot;&gt;Material&lt;/a&gt;，在一次执行 ‘pod update’ 后，项目报错，不能编译通过，提示 “MotionTransition 文件重复”。Motion 是该库的依赖库。&lt;/p&gt;
     
     </summary>
     
@@ -48,21 +49,22 @@
     <link href="http://luopeike.com/2016/11/12/Xcode-%E5%A4%9A-Targets-%E7%89%88%E6%9C%AC%E5%8F%B7%E6%8E%A7%E5%88%B6/"/>
     <id>http://luopeike.com/2016/11/12/Xcode-多-Targets-版本号控制/</id>
     <published>2016-11-12T13:27:17.000Z</published>
-    <updated>2018-04-23T16:06:23.506Z</updated>
+    <updated>2018-06-14T15:45:43.999Z</updated>
     
     <content type="html"><![CDATA[<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>一个项目里有多个 Targets，其中一个的更新比较频繁，版本号递增很快，其他几个不经常更新，但是当它们更新的时候需要和更新快的那个版本号保持一致。如果每次都手动修改版本号，有点麻烦，所以需要找一个自动化方法实现多 Targets 版本号控制。</p>
+<a id="more"></a> 
 <h3 id="查找资料"><a href="#查找资料" class="headerlink" title="查找资料"></a>查找资料</h3><p>Google 这几个关键词：“xcode general version auto”，找到一篇 Apple 官方文档：</p>
 <p><a href="https://developer.apple.com/library/content/qa/qa1827/_index.html" target="_blank" rel="external">https://developer.apple.com/library/content/qa/qa1827/_index.html</a></p>
 <p>发现 Apple 提供了命令行工具 agvtool 来进行项目版本号控制，而且<br>“Important: When your app includes multiple targets, agvtool will set the version numbers of all your targets to the same number.” （重要：当你的 APP 包含多个 targets 的时候，agvtool 会把所有的 targets 设为同一个版本号）刚好符合需求。</p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>agvtool 命令行工具是 Xcode Command Line 的一部分，不需要单独安装。根据官方文档在工程里设置好 Versioning System 等内容后，在终端 cd 到项目目录下，执行如下命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Version=&quot;1.7.5&quot;</div><div class="line">Build=&quot;2929&quot;</div><div class="line">xcrun agvtool new-marketing-version $&#123;Version&#125;</div><div class="line">xcrun agvtool new-version -all $&#123;Build&#125;</div></pre></td></tr></table></figure>
 <p>成功修改了所有 Targets 的版本号。</p>
-<p>最后，把这四行命令添加到项目的自动发布脚本里，每次发布新版本之前自动更新所有 Targets 的版本号，大功告成！</p>
+<p>最后，把这四行命令添加到项目的自动发布脚本里，就可以在每次发布新版本之前自动更新所有 Targets 的版本号了。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h3 id=&quot;需求&quot;&gt;&lt;a href=&quot;#需求&quot; class=&quot;headerlink&quot; title=&quot;需求&quot;&gt;&lt;/a&gt;需求&lt;/h3&gt;&lt;p&gt;一个项目里有多个 Targets，其中一个的更新比较频繁，版本号递增很快，其他几个不经常更新，但是当它们更新的时候需要和更新快的那个版本号保
+      &lt;h3 id=&quot;需求&quot;&gt;&lt;a href=&quot;#需求&quot; class=&quot;headerlink&quot; title=&quot;需求&quot;&gt;&lt;/a&gt;需求&lt;/h3&gt;&lt;p&gt;一个项目里有多个 Targets，其中一个的更新比较频繁，版本号递增很快，其他几个不经常更新，但是当它们更新的时候需要和更新快的那个版本号保持一致。如果每次都手动修改版本号，有点麻烦，所以需要找一个自动化方法实现多 Targets 版本号控制。&lt;/p&gt;
     
     </summary>
     
