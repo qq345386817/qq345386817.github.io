@@ -209,6 +209,160 @@
             
 
   
+    <article id="post-关于HTTP的队头阻塞问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/关于HTTP的队头阻塞问题/" target="_blank">关于 HTTP 的队头阻塞问题，以及为什么会有 HTTP/2 和 HTTP/3</a>
+  
+    </h1>
+  
+
+
+  
+  
+<a href="/关于HTTP的队头阻塞问题/" class="archive-article-date">
+        <time datetime="2021-06-03T08:27:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-03</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ul>
+<li>为什么浏览器会为一个域名建立6个连接？客户端和服务器的连接越多越好吗？</li>
+<li>为什么会有雪碧图（Spriting）、资源内联（inlining）、域名分片（Sharding）这些网页优化手段？</li>
+</ul>
+<h3 id="HTTP-1-的队头阻塞"><a href="#HTTP-1-的队头阻塞" class="headerlink" title="HTTP/1 的队头阻塞"></a>HTTP/1 的队头阻塞</h3><h4 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h4><ol>
+<li>HTTP 协议和请求-应答模型；</li>
+<li>TCP/IP 四层模型。<br><img src="./img/tcp_ip.png" alt="TCP/IP"></li>
+</ol>
+<h4 id="HTTP-1-1请求简析"><a href="#HTTP-1-1请求简析" class="headerlink" title="HTTP/1.1请求简析"></a>HTTP/1.1请求简析</h4><ol>
+<li>浏览器基于 HTTP/1.1 请求简单的script.js文件 </li>
+</ol>
+<p><img src="./img/http1-1.jpg" alt="HTTP/1.1-1"></p>
+<ol start="2">
+<li>浏览器基于 HTTP/1.1 请求script.js文件和style.css文件 </li>
+</ol>
+<p><img src="./img/http1-2.jpg" alt="HTTP/1.1-2"></p>
+<ol start="3">
+<li>浏览器基于 HTTP/1.1 “并发” 请求script.js文件和style.css文件 </li>
+</ol>
+<p><img src="./img/http1-3.jpg" alt="HTTP/1.1-3"></p>
+<h4 id="HTTP-1-1的问题"><a href="#HTTP-1-1的问题" class="headerlink" title="HTTP/1.1的问题"></a>HTTP/1.1的问题</h4><ul>
+<li>队头阻塞：<ul>
+<li>请求的队头阻塞（可以由 “管道” 解决）</li>
+<li>响应的队头阻塞（导致 Web 性能问题的主要原因）</li>
+</ul>
+</li>
+<li>“大头娃娃”，即使只发一个字节的消息，也需要 “带上一个完整的头”；</li>
+<li>“请求-应答” 模型的天然限制。</li>
+</ul>
+<h3 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h3><h4 id="HTTP-2-的优点"><a href="#HTTP-2-的优点" class="headerlink" title="HTTP/2 的优点"></a>HTTP/2 的优点</h4><ol>
+<li>HTTP/2 完全兼容 HTTP/1；</li>
+<li>废除了起始行，统一使用头字段，在两端维护字段“Key-Value”的索引表，使用 “HPACK” 算法压缩头部信息，消除冗余数据、节约带宽；</li>
+<li>全面采用二进制格式，提高解析效率，把报文切分为多种类型的二进制帧，报头里最重要的字段是流标识符，标记帧属于哪个流；</li>
+<li>使用虚拟的“流”传输消息，同时实现了“多路复用”，在一个 HTTP/2 连接上可以并发多个流，也就是多个“请求 - 响应”报文，提高连接的利用率，从而解决了 HTTP/1 的“队头阻塞”问题；</li>
+<li>流之间可以用 Weight 权重调节优先级，还可以直接设置流间的依赖关系；</li>
+<li>支持消息推送；</li>
+<li>更安全；</li>
+<li>如果已经升级到了 HTTPS，那么再升级到 HTTP/2 会很简单；</li>
+<li>TLS 协议提供“ALPN”扩展，让客户端和服务器协商使用的应用层协议，“发现”HTTP/2 服务；</li>
+<li>雪碧图（Spriting）、资源内联（inlining）、域名分片（Sharding）这些手段会对 HTTP/2 的性能优化造成反效果。</li>
+</ol>
+<h4 id="HTTP-2-的问题"><a href="#HTTP-2-的问题" class="headerlink" title="HTTP/2 的问题"></a>HTTP/2 的问题</h4><ol>
+<li>虽然协议支持 “明文” 版本，但主流浏览器只支持 “加密” 版；</li>
+<li>TCP协议仍然存在 “队头阻塞”，所以 HTTP/2 在弱网下的性能表现可能不如 HTTP/1。</li>
+</ol>
+<h4 id="HTTP-2-请求简析"><a href="#HTTP-2-请求简析" class="headerlink" title="HTTP/2 请求简析"></a>HTTP/2 请求简析</h4><ol>
+<li><p>HTTP/2多路复用响应script.js和style.css<br><img src="./img/http2-1.jpg" alt="HTTP/2-1"></p>
+</li>
+<li><p>“流” 传输解决队头阻塞问题<br><img src="./img/http2-2.png" alt="HTTP/2-2"></p>
+</li>
+<li><p>TCP 队头阻塞导致 HTTP 队头阻塞<br><img src="./img/http2-tcp.jpg" alt="HTTP/2-TCP"></p>
+</li>
+</ol>
+<ul>
+<li>在上面的请求里，数据包2丢失会队头阻塞数据包3</li>
+<li>TCP层队头阻塞会最终导致HTTP阻塞</li>
+</ul>
+<h3 id="HTTP-3"><a href="#HTTP-3" class="headerlink" title="HTTP/3"></a>HTTP/3</h3><ol>
+<li><p>HTTP/1.1 vs HTTP/2 vs HTTP/3 响应script.js<br><img src="./img/http1-2-3.jpg" alt="HTTP/2-2"></p>
+</li>
+<li><p>TCP 和 QUIC 的差异<br><img src="./img/TCP-QUIC.jpg" alt="TCP_QUIC"></p>
+</li>
+</ol>
+<h4 id="HTTP-3-解决的问题"><a href="#HTTP-3-解决的问题" class="headerlink" title="HTTP/3 解决的问题"></a>HTTP/3 解决的问题</h4><ul>
+<li>HTTP/3 的目标是优化传输层协议，保留了 HTTP/2 协议在应用层上的优秀设计；</li>
+<li>使用 QUIC 协议解决了 TCP 层的队头阻塞。</li>
+</ul>
+<h4 id="HTTP-3-的问题"><a href="#HTTP-3-的问题" class="headerlink" title="HTTP/3 的问题"></a>HTTP/3 的问题</h4><ul>
+<li>QUIC 在单个资源流中保留排序，所以仍然存在 “队头阻塞”</li>
+</ul>
+<h3 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h3><h4 id="为什么不是-HTTP-2-0-？"><a href="#为什么不是-HTTP-2-0-？" class="headerlink" title="为什么不是 HTTP/2.0 ？"></a>为什么不是 HTTP/2.0 ？</h4><p>HTTP/2 工作组认为以前的“1.0”“1.1”造成了很多的混乱和误解，让人在实际的使用中难以区分差异，所以就决定 HTTP 协议不再使用小版本号（minor version），只使用大版本号（major version），从今往后 HTTP 协议不会出现 HTTP/2.0、2.1，只会有“HTTP/2”“HTTP/3”……</p>
+<h4 id="HTTP-2-的高性能实现原理"><a href="#HTTP-2-的高性能实现原理" class="headerlink" title="HTTP/2 的高性能实现原理"></a>HTTP/2 的高性能实现原理</h4><p>静态表和 Huffman 编码可以将 HTTP 头部压缩近一半的体积，但这只是连接上第 1 个请求的压缩比。后续请求头部通过动态表可以压缩 90% 以上，这大大提升了编码效率。当然，动态表也会导致内存占用过大，影响服务器的总体并发能力，因此服务器会限制 HTTP/2 连接的使用时长。</p>
+<p>HTTP/2 的另一个优势是实现了 Stream 并发，这节约了 TCP 和 TLS 协议的握手时间，并减少了 TCP 的慢启动阶段对流量的影响。同时，Stream 之间可以用 Weight 权重调节优先级，还可以直接设置 Stream 间的依赖关系，这样接收端就可以获得更优秀的体验。</p>
+<p>HTTP/2 支持消息推送，从 HTTP/1.1 的拉模式到推模式，信息传输效率有了巨大的提升。HTTP/2 推消息时，会使用 PUSH_PROMISE 帧传输头部，并用双号的 Stream 来传递包体，了解这一点对定位复杂的网络问题很有帮助。</p>
+<p>HTTP/2 的最大问题来自于它下层的 TCP 协议。由于 TCP 是字符流协议，在前 1 字符未到达时，后接收到的字符只能存放在内核的缓冲区里，即使它们是并发的 Stream，应用层的 HTTP/2 协议也无法收到失序的报文，这就叫做队头阻塞问题。解决方案是放弃 TCP 协议，转而使用 UDP 协议作为传输层协议，这就是 HTTP/3 协议的由来。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/330300133" target="_blank" rel="noopener">（译）Robin Marx: QUIC 和 HTTP/3 队头阻塞的细节</a></li>
+<li>极客时间《透视HTTP协议》专栏</li>
+<li><a href="https://halfrost.com/http2-header-compression/" target="_blank" rel="noopener">详解 HTTP/2 头压缩算法 —— HPACK</a></li>
+</ul>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/关于HTTP的队头阻塞问题/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-解决 macOS git 403 错误" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
