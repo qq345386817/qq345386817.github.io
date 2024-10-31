@@ -6,7 +6,7 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://luopeike.com">
-  <title>关于 HTTP 的队头阻塞问题，以及为什么会有 HTTP/2 和 HTTP/3 | PeterLuo&#39;s Blog</title>
+  <title>关于 HTTP 的队头阻塞问题，以及为什么会有 HTTP/2 和 HTTP/3 | peter的部落格</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
@@ -14,7 +14,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于 HTTP 的队头阻塞问题，以及为什么会有 HTTP&#x2F;2 和 HTTP&#x2F;3">
 <meta property="og:url" content="http://luopeike.com/关于HTTP的队头阻塞问题/index.html">
-<meta property="og:site_name" content="PeterLuo&#39;s Blog">
+<meta property="og:site_name" content="peter的部落格">
 <meta property="og:description" content="问题 为什么浏览器会为一个域名建立6个连接？客户端和服务器的连接越多越好吗？ 为什么会有雪碧图（Spriting）、资源内联（inlining）、域名分片（Sharding）这些网页优化手段？  HTTP/1 的队头阻塞前置知识 HTTP 协议和请求-应答模型； TCP/IP 四层模型。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://luopeike.com/images/tcp_ip.png">
@@ -32,7 +32,7 @@
 <meta name="twitter:description" content="问题 为什么浏览器会为一个域名建立6个连接？客户端和服务器的连接越多越好吗？ 为什么会有雪碧图（Spriting）、资源内联（inlining）、域名分片（Sharding）这些网页优化手段？  HTTP/1 的队头阻塞前置知识 HTTP 协议和请求-应答模型； TCP/IP 四层模型。">
 <meta name="twitter:image" content="http://luopeike.com/images/tcp_ip.png">
   
-    <link rel="alternative" href="/atom.xml" title="PeterLuo&#39;s Blog" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="peter的部落格" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -543,23 +543,6 @@
 
 
 <!--  -->
-
-<script>
-  /* 标签页标题切换 */
-  var originTitle = document.title;
-  var titleTime;
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-      document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
-      clearTimeout(titleTime);
-    } else {
-      document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
-      titleTime = setTimeout(function () {
-        document.title = originTitle;
-      }, 2000);
-    }
-  });
-</script>
 
 
     

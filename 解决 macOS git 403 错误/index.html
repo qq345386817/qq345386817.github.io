@@ -6,7 +6,7 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://luopeike.com">
-  <title>解决 macOS git 403 错误 | PeterLuo&#39;s Blog</title>
+  <title>解决 macOS git 403 错误 | peter的部落格</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
@@ -14,7 +14,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="解决 macOS git 403 错误">
 <meta property="og:url" content="http://luopeike.com/解决 macOS git 403 错误/index.html">
-<meta property="og:site_name" content="PeterLuo&#39;s Blog">
+<meta property="og:site_name" content="peter的部落格">
 <meta property="og:description" content="问题起源：公司电脑，换人了。把 git config 的 username 和 userEmail 改为新账号后，git clone 报错 403，也没有弹出让输入新密码的选项。电脑是 macOS 系统。  经过一番搜索，发现用如下命令即可解决问题：1git config --global credential.helper osxkeychain 执行过这个命令后，再次 git clone，会">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2021-06-22T12:40:47.990Z">
@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="解决 macOS git 403 错误">
 <meta name="twitter:description" content="问题起源：公司电脑，换人了。把 git config 的 username 和 userEmail 改为新账号后，git clone 报错 403，也没有弹出让输入新密码的选项。电脑是 macOS 系统。  经过一番搜索，发现用如下命令即可解决问题：1git config --global credential.helper osxkeychain 执行过这个命令后，再次 git clone，会">
   
-    <link rel="alternative" href="/atom.xml" title="PeterLuo&#39;s Blog" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="peter的部落格" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -469,23 +469,6 @@
 
 
 <!--  -->
-
-<script>
-  /* 标签页标题切换 */
-  var originTitle = document.title;
-  var titleTime;
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-      document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
-      clearTimeout(titleTime);
-    } else {
-      document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
-      titleTime = setTimeout(function () {
-        document.title = originTitle;
-      }, 2000);
-    }
-  });
-</script>
 
 
     
